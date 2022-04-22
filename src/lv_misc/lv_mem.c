@@ -12,6 +12,11 @@
 #include "lv_gc.h"
 #include <string.h>
 
+#include "esp_system.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "esp_freertos_hooks.h"
+
 #if LV_MEM_CUSTOM != 0
     #include LV_MEM_CUSTOM_INCLUDE
 #endif
@@ -123,7 +128,7 @@ void _lv_mem_init(void)
     work_mem = (uint8_t *)work_mem_int;
     mem_max_size = 0;
 #else
-    work_mem = (uint8_t *)LV_MEM_ADR;
+    work_mem = (uint8_t *)heap_caps_calloc(LV_MEM_SIZE, 1, MALLOC_CAP_SPIRAM);
 #endif
 
     lv_mem_ent_t * full = (lv_mem_ent_t *)work_mem;
